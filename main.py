@@ -1,8 +1,6 @@
 import scipy.io
-TRACE_PATH = 'C:\\Users\\pc235\\Desktop\\20160304\\20160304-0001'
-# HPJ TRACE_PATH = '/Users/HPJ_1996/PycharmProjects/System-Security/20160304/20160304-0001'
-PLAIN_TEXT_PATH = 'C:\\Users\\pc235\\Desktop\\20160304\\log20160304-0001.txt'
-# HPJ PLAIN_TEXT_PATH = '/Users/HPJ_1996/PycharmProjects/System-Security/20160304/20160304-0001/log20160304-0001.txt'
+TRACE_PATH = './20160304/20160304-0001'
+PLAIN_TEXT_PATH = './20160304/log20160304-0001.txt'
 
 
 KEY_AMOUNT = 256 #00~FF
@@ -26,3 +24,7 @@ for i in range(DATA_AMOUNT):
     dataTemp = plainTextFile.readline()
     plainTextList.append( dataTemp[len(dataTemp)-33:len(dataTemp)-1] )
     junk = plainTextFile.readline()
+
+print(traceList[0])
+print(traceList[1])
+print(traceList[2])
