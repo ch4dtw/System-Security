@@ -8,7 +8,7 @@ LOG = "LOG.txt"
 
 CS_TIME = time.time()
 KEY_AMOUNT = 256 #00~FF
-DATA_AMOUNT = 52
+DATA_AMOUNT = 2500
 TRACE_AMOUNT = 100004
 traceList = []
 plainTextList = []
