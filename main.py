@@ -1,6 +1,6 @@
 import scipy.io
-TRACE_PATH = '/Users/HPJ_1996/Downloads/20160304/20160304-0001'
-PLAIN_TEXT_PATH = '/Users/HPJ_1996/Downloads/20160304/log20160304-0001.txt'
+TRACE_PATH =      '/Users/HPJ_1996/PycharmProjects/System-Security/20160304/20160304-0001'
+PLAIN_TEXT_PATH = '/Users/HPJ_1996/PycharmProjects/System-Security/20160304/log20160304-0001.txt'
 
 KEY_AMOUNT = 256 #00~FF
 DATA_AMOUNT = 2500
