@@ -8,14 +8,14 @@ import time
 # TRACE_NAME = 'A'
 
 TRACE_PATH = './20160320'
-PLAIN_TEXT_PATH = './log0320.txt'
+PLAIN_TEXT_PATH = './20160320/log0320.txt'
 LOG = "NEW_LOG.txt"
 TRACE_NAME = 'trace'
 
 CS_TIME = time.time()
 BYTE_AMOUNT = 16 #0~15
 KEY_AMOUNT = 256 #00~FF
-DATA_AMOUNT = 1000 #old is 2500
+DATA_AMOUNT = 1000*10 #old is 2500
 TRACE_AMOUNT = 48031
 traceList = []
 plainTextList = []
@@ -32,8 +32,8 @@ def getY(plainText,nByte,key):
 #     fileName= '%s%s_%04d' % (TRACE_PATH, TRACE_PATH[len(TRACE_PATH)-14:], i+1)
 #     traceList.append( scipy.io.loadmat(fileName) )
 
-for group in range(1,2):
-    for i in range(DATA_AMOUNT):
+for group in range(1,11):
+    for i in range(1000):
         fileName = '%s%s-%04d_%04d' % (TRACE_PATH, TRACE_PATH[len(TRACE_PATH)-9:], group, i + 1)
         #20160320-0001_0001.mat
         traceList.append( scipy.io.loadmat(fileName) )

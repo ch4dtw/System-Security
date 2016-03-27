@@ -12,7 +12,7 @@ TRACE_NAME = 'A'
 CS_TIME = time.time()
 BYTE_AMOUNT = 16 #0~15
 KEY_AMOUNT = 256 #00~FF
-DATA_AMOUNT = 2500 #old is 2500
+DATA_AMOUNT = 2500*2 #old is 2500
 TRACE_AMOUNT = 100004
 traceList = []
 plainTextList = []
@@ -25,25 +25,27 @@ def getY(plainText,nByte,key):
     x = plainText[nByte*2:nByte*2+2]
     return SBOX[ int(x,16) ^ key ]
 
-for i in range(DATA_AMOUNT):
+for i in range(2500):
     fileName= '%s%s_%04d' % (TRACE_PATH, TRACE_PATH[len(TRACE_PATH)-14:], i+1)
     traceList.append( scipy.io.loadmat(fileName) )
-for i in range(DATA_AMOUNT):
+for i in range(2500):
     fileName = '%s%s_%04d' % (TRACE_PATH_2, TRACE_PATH_2[len(TRACE_PATH_2) - 14:], i + 1)
     traceList.append(scipy.io.loadmat(fileName))
 
 
 plainTextFile = open(PLAIN_TEXT_PATH, 'r')
-for i in range(DATA_AMOUNT):
+for i in range(2500):
     dataTemp = plainTextFile.readline()
     plainTextList.append( dataTemp[len(dataTemp)-33:len(dataTemp)-1] )
     junk = plainTextFile.readline()
+plainTextFile.close()
 
-plainTextFile = open(PLAIN_TEXT_PATH_2, 'r')
-for i in range(DATA_AMOUNT):
-    dataTemp = plainTextFile.readline()
+plainTextFile2 = open(PLAIN_TEXT_PATH_2, 'r')
+for i in range(2500):
+    dataTemp = plainTextFile2.readline()
     plainTextList.append( dataTemp[len(dataTemp)-33:len(dataTemp)-1] )
-    junk = plainTextFile.readline()
+    junk = plainTextFile2.readline()
+plainTextFile2.close()
 
 
 
