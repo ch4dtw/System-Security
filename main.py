@@ -4,6 +4,7 @@ import time
 
 TRACE_PATH = './20160304/20160304-0001'
 PLAIN_TEXT_PATH = './20160304/log20160304-0001.txt'
+LOG = "LOG.txt"
 
 CS_TIME = time.time()
 KEY_AMOUNT = 256 #00~FF
@@ -30,62 +31,71 @@ for i in range(DATA_AMOUNT):
     junk = plainTextFile.readline()
 
 
-LSB0_Count = []
-LSB1_Count = []
-LSB0_Avg = []
-LSB1_Avg = []
-SUB_LSB1Avg_LSB0Avg = []
 
-for i in range(KEY_AMOUNT):
-    LSB0_Count.append(0)
-    LSB1_Count.append(0)
-    LSB0_Avg.append(0)
-    LSB1_Avg.append(0)
-    SUB_LSB1Avg_LSB0Avg.append(0)
 
+
+
+
+
+
+
+
+
+
+LSB0_Count = [0.0]*KEY_AMOUNT*16
+LSB1_Count = [0.0]*KEY_AMOUNT*16
+LSB0_Avg = [0.0]*KEY_AMOUNT*16
+LSB1_Avg = [0.0]*KEY_AMOUNT*16
+SUB_LSB1Avg_LSB0Avg = [0.0]*KEY_AMOUNT*16
+keyTemp = [0.0]*KEY_AMOUNT*16
 
 S_time = time.time()
-for nByte in range(0,16):
-    for i in range(DATA_AMOUNT):
+
+for i in range(DATA_AMOUNT):
+    for nByte in range(0,16):
         for key in range(KEY_AMOUNT):
             if getY(plainTextList[i],nByte,key)%2 == 0:
-                LSB0_Avg[key] += ( (traceList[i]['A']-LSB0_Avg[key])/(LSB0_Count[key]+1) )
-                LSB0_Count[key] += 1
+                LSB0_Avg[key+nByte*KEY_AMOUNT] += ( (traceList[i]['A']-LSB0_Avg[key+nByte*KEY_AMOUNT])/(LSB0_Count[key+nByte*KEY_AMOUNT]+1) )
+                LSB0_Count[key+nByte*KEY_AMOUNT] += 1
             else:
-                LSB1_Avg[key] += ( (traceList[i]['A']-LSB1_Avg[key])/(LSB1_Count[key]+1) )
-                LSB1_Count[key] += 1
-            SUB_LSB1Avg_LSB0Avg[key] = LSB0_Avg[key] - LSB1_Avg[key]
+                LSB1_Avg[key+nByte*KEY_AMOUNT] += ( (traceList[i]['A']-LSB1_Avg[key+nByte*KEY_AMOUNT])/(LSB1_Count[key+nByte*KEY_AMOUNT]+1) )
+                LSB1_Count[key+nByte*KEY_AMOUNT] += 1
+            SUB_LSB1Avg_LSB0Avg[key+nByte*KEY_AMOUNT] = LSB0_Avg[key+nByte*KEY_AMOUNT] - LSB1_Avg[key+nByte*KEY_AMOUNT]
 
-    for i in range(KEY_AMOUNT):
-        SUB_LSB1Avg_LSB0Avg[i] = numpy.sort( abs(SUB_LSB1Avg_LSB0Avg[i]), axis=0 )
+         #for nByte in range(0, 16):
+        for key in range(KEY_AMOUNT):
+            keyTemp[key+nByte*KEY_AMOUNT] = numpy.amax( abs(SUB_LSB1Avg_LSB0Avg[key+nByte*KEY_AMOUNT]), axis=0 )
 
 
-    max = [0.0,0]
-    # [0] = num ,[1]=i
-    for i in range(KEY_AMOUNT):
-        if(SUB_LSB1Avg_LSB0Avg[i][100003][0]>max[0]):
-            max[0] = SUB_LSB1Avg_LSB0Avg[i][100003][0]
-            max[1] = i
+        max = [0.0,0]*16
+        # [0] = num ,[1]=i
+        for key in range(KEY_AMOUNT):
+            if(keyTemp[key+nByte*KEY_AMOUNT][0]>max[0]):
+                max[0] = keyTemp[key+nByte*KEY_AMOUNT][0]
+                max[1] = key
 
-    KEY += str(hex(max[1]))[2:4].upper()
-    print(KEY)
+        KEY += "%3s" %str(hex(max[1]))[2:4].upper()
+        # print(KEY)
+        #
+        # f=open(LOG,"a")
+        # f.write(str(nByte) + str(max) + '\n')
+        # f.close()
 
-    f=open("log2.txt","a")
-    f.write(str(nByte) + str(max) + '\n')
+
+        # for key in range(KEY_AMOUNT):
+        #     LSB0_Count[key] = 0
+        #     LSB1_Count[key] = 0
+        #     LSB0_Avg[key] = 0
+        #     LSB1_Avg[key] = 0
+        #     SUB_LSB1Avg_LSB0Avg[key] = 0
+        #     keyTemp[key] = 0
+
+    print(str(i) + ": " + KEY +" ")
+    E_time = time.time()
+    f = open(LOG, "a")
+    f.write("Cost time = " + str(E_time-S_time)+'\n')
+    f.write("KEY = " + KEY+'\n')
     f.close()
-    print(str(nByte) , str(max))
-
-    for i in range(KEY_AMOUNT):
-        LSB0_Count[i] = 0
-        LSB1_Count[i] = 0
-        LSB0_Avg[i] = 0
-        LSB1_Avg[i] = 0
-        SUB_LSB1Avg_LSB0Avg[i] = 0
-
-E_time = time.time()
-f = open("log2.txt", "a")
-f.write("Cost time = " + str(E_time-S_time)+'\n')
-f.write("KEY = " + KEY+'\n')
-f.close()
+    KEY = ""
 
 #OwO
