@@ -16,7 +16,7 @@ CS_TIME = time.time()
 BYTE_AMOUNT = 16 #0~15
 KEY_AMOUNT = 256 #00~FF
 DATA_AMOUNT = 1000 #old is 2500
-TRACE_AMOUNT = 100004
+TRACE_AMOUNT = 48031
 traceList = []
 plainTextList = []
 junk = ""
@@ -58,7 +58,7 @@ S_time = time.time()
 for i in range(DATA_AMOUNT):
     for nByte in range(BYTE_AMOUNT):
         for key in range(KEY_AMOUNT):
-            if getY(plainTextList[i], nByte, key) % 2 == 0:
+            if getY(plainTextList[i%DATA_AMOUNT], nByte, key) % 2 == 0:
                 LSB0_Avg[key + KEY_AMOUNT*nByte] += (
                 (traceList[i][TRACE_NAME] - LSB0_Avg[key + KEY_AMOUNT*nByte]) / (LSB0_Count[key + KEY_AMOUNT*nByte] + 1) )
                 LSB0_Count[key + KEY_AMOUNT*nByte] += 1
