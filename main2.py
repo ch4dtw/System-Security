@@ -4,7 +4,7 @@ import time
 
 TRACE_PATH = './20160304/20160304-0001'
 PLAIN_TEXT_PATH = './20160304/log20160304-0001.txt'
-LOG = "LOG.txt"
+LOG = "LOG2.txt"
 
 CS_TIME = time.time()
 BYTE_AMOUNT = 16
