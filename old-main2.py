@@ -57,9 +57,8 @@ for i in range(DATA_AMOUNT):
 S_time = time.time()
 
 
-
-v_List = [[[0] * KEY_AMOUNT] * BYTE_AMOUNT] * DATA_AMOUNT  # v_List[第n筆][nByte][key]
-h_List = [[[0] * KEY_AMOUNT] * BYTE_AMOUNT] * DATA_AMOUNT  # h_List[第n筆][nByte][key]
+v_List = [[[0] * KEY_AMOUNT] * DATA_AMOUNT] * BYTE_AMOUNT  # v_List[nByte][第n筆][key]
+h_List = [[[0] * KEY_AMOUNT] * DATA_AMOUNT] * BYTE_AMOUNT  # h_List[nByte][第n筆][key]
 t_List = [[0] * ( TRACE_AMOUNT // 5 )] * DATA_AMOUNT # t_List[第n筆][Trace的第幾個點點]
 r_List = [[[0.0] * ( TRACE_AMOUNT // 5)] * KEY_AMOUNT] * BYTE_AMOUNT # r_List[nByte][key][trace]
 
@@ -68,60 +67,42 @@ x_square_bar = [[0.0] * KEY_AMOUNT] * BYTE_AMOUNT # x_square_bar[nByte][key]
 y_bar = [0.0] * ( TRACE_AMOUNT // 5 ) # y_bar[Trace的第幾個點點]
 y_square_bar = [0.0] * ( TRACE_AMOUNT // 5 ) # y_square_bar[Trace的第幾個點點]
 
+for i in range(DATA_AMOUNT):
+    for nByte in range(BYTE_AMOUNT):
+        for key in range(KEY_AMOUNT):
+            v_List[nByte][i][key] = getY(plainTextList[i],nByte,key)
+            h_List[nByte][i][key] = hammingWeight( v_List[nByte][i][key] )
+            x_bar[nByte][key] += ( h_List[nByte][i][key] - x_bar[nByte][key] ) / (i+1)
+            x_square_bar[nByte][key] += ( (h_List[nByte][i][key])**2 - x_square_bar[nByte][key]) / (i+1)
 
 for i in range(DATA_AMOUNT):
+    for trace in range(TRACE_AMOUNT // 5):
+        t_List[i][trace] = traceList[i][TRACE_NAME][trace * 5][0]
+        y_bar[trace] += ( t_List[i][trace] - y_bar[trace]) / (i+1)
+        y_square_bar += ( t_List[i][trace]**2 - y_square_bar[trace]) / (i+1)
 
+sum = 0.0
+max = [0.0,0] * BYTE_AMOUNT
+for nByte in range(BYTE_AMOUNT):
+    for key in range(KEY_AMOUNT):
+        for trace in range (TRACE_AMOUNT // 5):
+            for i in range (DATA_AMOUNT):
+                sum += h_List[nByte][i][key] * t_List[i][trace]
+            r_List[nByte][key][trace] = ( sum - DATA_AMOUNT * x_bar[nByte][key] * y_bar[nByte] ) / ( ( ( x_square_bar[nByte][key] - ( x_bar[nByte][key] )**2  ) * ( y_square_bar[trace] - ( y_bar[trace] ) **2  ) ) ** (0.5) )
+            if(r_List[nByte][key][trace] > max[0] ):
+                max[nByte * 2 + 0] = r_List[nByte][key][trace]
+                max[nByte * 2 + 1] = key
 
+    log_KEY += ("%02x" % max[nByte * 2 + 1]).upper()
+    print_KEY += ("%02x " % max[nByte * 2 + 1]).upper()
 
+print(str(i)+': ',print_KEY)
 
+E_time = time.time()
+f = open(LOG, "a")
+f.write("round " + str(i) + ": KEY = " + log_KEY + ",")
+f.write("Cost time = " + str(E_time - S_time) + '\n')
+f.close()
 
-
-
-
-
-
-
-
-
-
-
-#
-# for i in range(DATA_AMOUNT):
-#     for nByte in range(BYTE_AMOUNT):
-#         for key in range(KEY_AMOUNT):
-#             v_List[nByte][i][key] = getY(plainTextList[i],nByte,key)
-#             h_List[nByte][i][key] = hammingWeight( v_List[nByte][i][key] )
-#             x_bar[nByte][key] += ( h_List[nByte][i][key] - x_bar[nByte][key] ) / (i+1)
-#             x_square_bar[nByte][key] += ( (h_List[nByte][i][key])**2 - x_square_bar[nByte][key]) / (i+1)
-#
-# for i in range(DATA_AMOUNT):
-#     for trace in range(TRACE_AMOUNT // 5):
-#         t_List[i][trace] = traceList[i][TRACE_NAME][trace * 5][0]
-#         y_bar[trace] += ( t_List[i][trace] - y_bar[trace]) / (i+1)
-#         y_square_bar += ( t_List[i][trace]**2 - y_square_bar[trace]) / (i+1)
-#
-# sum = 0.0
-# max = [0.0,0] * BYTE_AMOUNT
-# for nByte in range(BYTE_AMOUNT):
-#     for key in range(KEY_AMOUNT):
-#         for trace in range (TRACE_AMOUNT // 5):
-#             for i in range (DATA_AMOUNT):
-#                 sum += h_List[nByte][i][key] * t_List[i][trace]
-#             r_List[nByte][key][trace] = ( sum - DATA_AMOUNT * x_bar[nByte][key] * y_bar[nByte] ) / ( ( ( x_square_bar[nByte][key] - ( x_bar[nByte][key] )**2  ) * ( y_square_bar[trace] - ( y_bar[trace] ) **2  ) ) ** (0.5) )
-#             if(r_List[nByte][key][trace] > max[0] ):
-#                 max[nByte * 2 + 0] = r_List[nByte][key][trace]
-#                 max[nByte * 2 + 1] = key
-#
-#     log_KEY += ("%02x" % max[nByte * 2 + 1]).upper()
-#     print_KEY += ("%02x " % max[nByte * 2 + 1]).upper()
-#
-# print(str(i)+': ',print_KEY)
-#
-# E_time = time.time()
-# f = open(LOG, "a")
-# f.write("round " + str(i) + ": KEY = " + log_KEY + ",")
-# f.write("Cost time = " + str(E_time - S_time) + '\n')
-# f.close()
-#
-# log_KEY = ""
-# print_KEY = ""
+log_KEY = ""
+print_KEY = ""
