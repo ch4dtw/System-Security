@@ -4,7 +4,7 @@ import time
 
 TRACE_PATH = './20160304/20160304-0001'
 PLAIN_TEXT_PATH = './20160304/log20160304-0001.txt'
-LOG = "LOG2.txt"
+LOG = "LOG.txt"
 
 CS_TIME = time.time()
 BYTE_AMOUNT = 16
@@ -43,8 +43,6 @@ def hammingWeight(input):
     return count
 
 
-S_time = time.time()
-
 for i in range(DATA_AMOUNT):
     fileName= '%s%s_%04d' % (TRACE_PATH, TRACE_PATH[len(TRACE_PATH)-14:], i+1)
     traceList.append( scipy.io.loadmat(fileName) )
@@ -54,6 +52,8 @@ for i in range(DATA_AMOUNT):
     dataTemp = plainTextFile.readline()
     plainTextList.append( dataTemp[len(dataTemp)-33:len(dataTemp)-1] )
     junk = plainTextFile.readline()
+
+S_time = time.time()
 
 
 v_List = [[[0] * KEY_AMOUNT] * DATA_AMOUNT] * BYTE_AMOUNT  # v_List[nByte][第n筆][key]
