@@ -25,23 +25,23 @@ def getY(plainText,nByte,key):
     x = plainText[nByte*2:nByte*2+2]
     return SBOX[ int(x,16) ^ key ]
 
-for i in range(2500):
+for i in range(DATA_AMOUNT//2):
     fileName= '%s%s_%04d' % (TRACE_PATH, TRACE_PATH[len(TRACE_PATH)-14:], i+1)
     traceList.append( scipy.io.loadmat(fileName) )
-for i in range(2500):
+for i in range(DATA_AMOUNT//2):
     fileName = '%s%s_%04d' % (TRACE_PATH_2, TRACE_PATH_2[len(TRACE_PATH_2) - 14:], i + 1)
     traceList.append(scipy.io.loadmat(fileName))
 
 
 plainTextFile = open(PLAIN_TEXT_PATH, 'r')
-for i in range(2500):
+for i in range(DATA_AMOUNT//2):
     dataTemp = plainTextFile.readline()
     plainTextList.append( dataTemp[len(dataTemp)-33:len(dataTemp)-1] )
     junk = plainTextFile.readline()
 plainTextFile.close()
 
 plainTextFile2 = open(PLAIN_TEXT_PATH_2, 'r')
-for i in range(2500):
+for i in range(DATA_AMOUNT//2):
     dataTemp = plainTextFile2.readline()
     plainTextList.append( dataTemp[len(dataTemp)-33:len(dataTemp)-1] )
     junk = plainTextFile2.readline()
