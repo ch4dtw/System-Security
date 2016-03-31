@@ -2,10 +2,6 @@ import scipy.io
 import numpy
 import time
 
-# TRACE_PATH = './20160304/20160304-0001'
-# PLAIN_TEXT_PATH = './20160304/log20160304-0001.txt'
-# LOG = "LOG.txt"
-# TRACE_NAME = 'A'
 
 TRACE_PATH = './20160320'
 PLAIN_TEXT_PATH = './20160320/log0320.txt'
@@ -15,7 +11,7 @@ TRACE_NAME = 'trace'
 CS_TIME = time.time()
 BYTE_AMOUNT = 16 #0~15
 KEY_AMOUNT = 256 #00~FF
-DATA_AMOUNT = 1000*10 #old is 2500
+DATA_AMOUNT = 1000*10
 TRACE_AMOUNT = 48031
 traceList = []
 plainTextList = []
@@ -28,24 +24,6 @@ def getY(plainText,nByte,key):
     x = plainText[nByte*2:nByte*2+2]
     return SBOX[ int(x,16) ^ key ]
 
-# for i in range(DATA_AMOUNT):
-#     fileName= '%s%s_%04d' % (TRACE_PATH, TRACE_PATH[len(TRACE_PATH)-14:], i+1)
-#     traceList.append( scipy.io.loadmat(fileName) )
-
-for group in range(1,11):
-    for i in range(1000):
-        fileName = '%s%s-%04d_%04d' % (TRACE_PATH, TRACE_PATH[len(TRACE_PATH)-9:], group, i + 1)
-        #20160320-0001_0001.mat
-        traceList.append( scipy.io.loadmat(fileName) )
-
-plainTextFile = open(PLAIN_TEXT_PATH, 'r')
-for i in range(DATA_AMOUNT):
-    dataTemp = plainTextFile.readline()
-    plainTextList.append( dataTemp[len(dataTemp)-33:len(dataTemp)-1] )
-    junk = plainTextFile.readline()
-
-
-
 LSB0_Count = [0.0]*KEY_AMOUNT*BYTE_AMOUNT
 LSB1_Count = [0.0]*KEY_AMOUNT*BYTE_AMOUNT
 LSB0_Avg = [0.0]*KEY_AMOUNT*BYTE_AMOUNT
@@ -54,8 +32,18 @@ SUB_LSB1Avg_LSB0Avg = [0.0]*KEY_AMOUNT*BYTE_AMOUNT
 keyTemp = [0.0]*KEY_AMOUNT*BYTE_AMOUNT
 
 S_time = time.time()
+plainTextFile = open(PLAIN_TEXT_PATH, 'r')
 
 for i in range(DATA_AMOUNT):
+
+    fileName = '%s%s-%04d_%04d' % (TRACE_PATH, TRACE_PATH[len(TRACE_PATH) - 9:], (i/1000) + 1, (i%1000) + 1)
+    # 20160320-0001_0001.mat
+    traceList.append(scipy.io.loadmat(fileName))
+
+    dataTemp = plainTextFile.readline()
+    plainTextList.append(dataTemp[len(dataTemp) - 33:len(dataTemp) - 1])
+    junk = plainTextFile.readline()
+
     for nByte in range(BYTE_AMOUNT):
         for key in range(KEY_AMOUNT):
             if getY(plainTextList[i%DATA_AMOUNT], nByte, key) % 2 == 0:
@@ -92,4 +80,3 @@ for i in range(DATA_AMOUNT):
 
     log_KEY = ""
     print_KEY = ""
-
