@@ -2,7 +2,6 @@ import scipy.io
 import numpy
 import time
 
-
 TRACE_PATH = './20160320'
 PLAIN_TEXT_PATH = './20160320/log0320.txt'
 LOG = "NEW_LOG.txt"
