@@ -16,7 +16,7 @@ TRACE_NAME = 'trace'
 
 CS_TIME = time.time()
 BYTE_AMOUNT = 16
-KEY_AMOUNT = 256 # 00~FF
+KEY_AMOUNT = 256  # 00~FF
 DATA_AMOUNT = 1000*10
 TRACE_AMOUNT = 48031
 SBOX = [99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 118, 202, 130, 201, 125,
@@ -43,31 +43,31 @@ def getY(plainText, nByte, key):
     x = plainText[nByte*2:nByte*2+2]
     return SBOX[ int(x,16) ^ key ]
 
-def hammingWeight(input):
+def hammingWeight( input ):
     count = 0
-    if(input & 0x80):
+    if( input & 0x80 ):
         count += 1
-    if (input & 0x40):
+    if ( input & 0x40 ):
         count += 1
-    if (input & 0x20):
+    if ( input & 0x20 ):
         count += 1
-    if (input & 0x10):
+    if ( input & 0x10 ):
         count += 1
-    if (input & 0x08):
+    if ( input & 0x08 ):
         count += 1
-    if (input & 0x04):
+    if ( input & 0x04 ):
         count += 1
-    if (input & 0x02):
+    if ( input & 0x02 ):
         count += 1
-    if (input & 0x01):
+    if ( input & 0x01 ):
         count += 1
     return count
 
 Start_time = time.time()
 
-h_sum = [0] * KEY_AMOUNT * BYTE_AMOUNT # h_sum[key + KEY_AMOUNT*nByte]
+h_sum = [0] * KEY_AMOUNT * BYTE_AMOUNT  # h_sum[key + KEY_AMOUNT*nByte]
 h_square_sum = [0] * KEY_AMOUNT * BYTE_AMOUNT  # h_square_sum[key + KEY_AMOUNT*nByte]
-t_sum = [0.0] * TRACE_AMOUNT # t_sum[point]
+t_sum = [0.0] * TRACE_AMOUNT  # t_sum[point]
 t_square_sum = [0.0] * TRACE_AMOUNT  # t_square_sum[point]
 sigma_h_times_t = [0.0] * TRACE_AMOUNT * KEY_AMOUNT * BYTE_AMOUNT
 # sigma_h_times_t[ point + TRACE_AMOUNT*key + KEY_AMOUNT*nByte ]
@@ -76,7 +76,7 @@ plainTextFile = open(PLAIN_TEXT_PATH, 'r')
 
 for i in range(DATA_AMOUNT):
 
-    t_now = [0.0] * TRACE_AMOUNT # t_now[point]
+    t_now = [0.0] * TRACE_AMOUNT  # t_now[point]
 
     fileName = '%s%s-%04d_%04d' % (TRACE_PATH, TRACE_PATH[len(TRACE_PATH) - 9:], (i / 1000) + 1, (i % 1000) + 1)
     # 20160320-0001_0001.mat
@@ -122,7 +122,7 @@ for i in range(DATA_AMOUNT):
 
                 Lyy = t_square_sum[point] - ( ( t_sum[point] ) / ( i + 1 ) )
 
-                cc_fractions = sigma_h_times_t[ indexOf_hXt ] - ( ( h_sum[ indexOf_h ]*t_sum[point] ) / ( i+1 ) ) # 分子
+                cc_fractions = sigma_h_times_t[ indexOf_hXt ] - ( ( h_sum[ indexOf_h ]*t_sum[point] ) / ( i+1 ) )
                 cc_numerator = ( Lxx*Lyy ) ** 0.5 # 分母
                 if( cc_numerator != 0):
                     cc = cc_fractions / cc_numerator
@@ -139,12 +139,12 @@ for i in range(DATA_AMOUNT):
         log_KEY += ( "%02X" % maxKey )
         print_KEY += ( "%02X " % maxKey )
 
-    print(str(i)+': ',print_KEY)
+    print( str(i)+': ', print_KEY )
 
     End_time = time.time()
     f = open( LOG, "a" )
-    f.write("round " + str(i) + ": KEY = " + log_KEY + ",")
-    f.write("Cost time = " + str( End_time - Start_time ) + '\n')
+    f.write( "round " + str(i) + ": KEY = " + log_KEY + "," )
+    f.write( "Cost time = " + str( End_time - Start_time ) + '\n' )
     f.close()
 
     log_KEY = ""
