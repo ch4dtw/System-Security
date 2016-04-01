@@ -66,8 +66,8 @@ for i in range(DATA_AMOUNT):
                 max[0] = keyTemp[key + nByte * KEY_AMOUNT][0]
                 max[1] = key
 
-        log_KEY += ("%02x" % max[1]).upper()
-        print_KEY += ("%02x " %max[1]).upper()
+        log_KEY += ("%02X" % max[1])
+        print_KEY += ("%02X " %max[1])
 
     print(str(i)+': ',print_KEY)
 
