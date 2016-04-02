@@ -28,27 +28,27 @@ SBOX = [99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 11
         134, 193, 29, 158, 225, 248, 152, 17, 105, 217, 142, 148, 155, 30, 135, 233, 206, 85, 40, 223,
         140, 161, 137, 13, 191, 230, 66, 104, 65, 153, 45, 15, 176, 84, 187, 22]
 
-def getY( plainText, nByte, key ):
+def getY(plainText, nByte, key):
     x = plainText[nByte*2:nByte*2+2]
-    return SBOX[ int(x,16) ^ key ]
+    return SBOX[int(x,16) ^ key]
 
-def hammingWeight( input ):
+def hammingWeight(input):
     count = 0
-    if( input & 0x80 ):
+    if(input & 0x80):
         count += 1
-    if ( input & 0x40 ):
+    if (input & 0x40):
         count += 1
-    if ( input & 0x20 ):
+    if (input & 0x20):
         count += 1
-    if ( input & 0x10 ):
+    if (input & 0x10):
         count += 1
-    if ( input & 0x08 ):
+    if (input & 0x08):
         count += 1
-    if ( input & 0x04 ):
+    if (input & 0x04):
         count += 1
-    if ( input & 0x02 ):
+    if (input & 0x02):
         count += 1
-    if ( input & 0x01 ):
+    if (input & 0x01):
         count += 1
     return count
 
@@ -63,7 +63,7 @@ h_times_t_sum = [ [ numpy.zeros( (TRACE_AMOUNT, 1), dtype = float ) ] * KEY_AMOU
 start_time = time.time()
 plainTextFile = open( PLAIN_TEXT_PATH, 'r' )
 
-for i in range( DATA_AMOUNT ):
+for i in range(DATA_AMOUNT):
 
     log_key = ''
     print_key = ''
@@ -71,7 +71,7 @@ for i in range( DATA_AMOUNT ):
     fileName = '%s%s-%04d_%04d' % (TRACE_PATH, TRACE_PATH[len(TRACE_PATH) - 9:], (i / 1000) + 1, (i % 1000) + 1)
     trace_now = scipy.io.loadmat(fileName)[TRACE_NAME]
     trace_sum += trace_now
-    trace_square_sum += ( trace_now * trace_now )
+    trace_square_sum += (trace_now * trace_now)
     Lyy = trace_square_sum - ((trace_sum ** 2) / (i + 1))
 
     dataTemp = plainTextFile.readline()
