@@ -30,8 +30,7 @@ SBOX = [99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 11
         232, 221, 116, 31, 75, 189, 139, 138, 112, 62, 181, 102, 72, 3, 246, 14, 97, 53, 87, 185,
         134, 193, 29, 158, 225, 248, 152, 17, 105, 217, 142, 148, 155, 30, 135, 233, 206, 85, 40, 223,
         140, 161, 137, 13, 191, 230, 66, 104, 65, 153, 45, 15, 176, 84, 187, 22]
-print_KEY = ""
-log_KEY = ""
+
 
 def getY( plainText, nByte, key ):
     x = plainText[nByte*2:nByte*2+2]
@@ -60,8 +59,6 @@ for i in range( DATA_AMOUNT//2 ):
 plainTextFile2.close()
 
 
-
-
 LSB0_Count = [0.0]*KEY_AMOUNT*BYTE_AMOUNT
 LSB1_Count = [0.0]*KEY_AMOUNT*BYTE_AMOUNT
 LSB0_Avg = [0.0]*KEY_AMOUNT*BYTE_AMOUNT
@@ -72,6 +69,10 @@ keyTemp = [0.0]*KEY_AMOUNT*BYTE_AMOUNT
 S_time = time.time()
 
 for i in range( DATA_AMOUNT ):
+
+    log_KEY = ""
+    print_KEY = ""
+
     for nByte in range( BYTE_AMOUNT ):
         for key in range( KEY_AMOUNT ):
             if getY(plainTextList[i], nByte, key) % 2 == 0:
@@ -105,7 +106,4 @@ for i in range( DATA_AMOUNT ):
     f.write("round " + str(i) + ": KEY = " + log_KEY + ",")
     f.write("Cost time = " + str(E_time - S_time) + '\n')
     f.close()
-
-    log_KEY = ""
-    print_KEY = ""
 
