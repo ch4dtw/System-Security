@@ -52,16 +52,16 @@ def hammingWeight(input):
         count += 1
     return count
 
-trace_sum = numpy.zeros( (TRACE_AMOUNT, 1), dtype = float )
-trace_square_sum = numpy.zeros( (TRACE_AMOUNT, 1), dtype = float )
-h_sum = numpy.zeros( (BYTE_AMOUNT, KEY_AMOUNT), dtype = int )
-h_square_sum = numpy.zeros( (BYTE_AMOUNT, KEY_AMOUNT), dtype = int )
+trace_sum = numpy.zeros((TRACE_AMOUNT, 1), dtype = float)
+trace_square_sum = numpy.zeros((TRACE_AMOUNT, 1), dtype = float)
+h_sum = numpy.zeros((BYTE_AMOUNT, KEY_AMOUNT), dtype = int)
+h_square_sum = numpy.zeros((BYTE_AMOUNT, KEY_AMOUNT), dtype = int)
 
-h_times_t_sum = [ [ numpy.zeros( (TRACE_AMOUNT, 1), dtype = float ) ] * KEY_AMOUNT ] * BYTE_AMOUNT
+h_times_t_sum = [[numpy.zeros((TRACE_AMOUNT, 1), dtype = float)] * KEY_AMOUNT] * BYTE_AMOUNT
 
 
 start_time = time.time()
-plainTextFile = open( PLAIN_TEXT_PATH, 'r' )
+plainTextFile = open(PLAIN_TEXT_PATH, 'r')
 
 for i in range(DATA_AMOUNT):
 
@@ -87,18 +87,18 @@ for i in range(DATA_AMOUNT):
 
         for key in range(KEY_AMOUNT):
 
-            h_now = hammingWeight( getY( plainText, nByte, key ) )
+            h_now = hammingWeight(getY(plainText, nByte, key))
             h_sum[nByte][key] += h_now
-            h_square_sum[nByte][key] += ( h_now * h_now )
+            h_square_sum[nByte][key] += (h_now * h_now)
             h_times_t_sum[nByte][key] += h_now * trace_now
 
-            Lxx = h_square_sum[nByte][key] - ( (h_sum[nByte][key] ** 2) / (i + 1) )
+            Lxx = h_square_sum[nByte][key] - ((h_sum[nByte][key] ** 2) / (i + 1))
 
-            cc_fractions = h_times_t_sum[nByte][key] - ( (h_sum[nByte][key] * trace_sum) / (i + 1) )  # 分子
+            cc_fractions = h_times_t_sum[nByte][key] - ((h_sum[nByte][key] * trace_sum) / (i + 1))  # 分子
             cc_numerator = (Lxx * Lyy) ** 0.5  # 分母
             cc = cc_fractions / cc_numerator
 
-            if( cc.max() > maxCC ):
+            if(cc.max() > maxCC):
                 maxCC = cc
                 maxKey = key
 
