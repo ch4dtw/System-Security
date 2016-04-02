@@ -1,7 +1,6 @@
 import scipy.io
 import numpy
 import time
-import math
 
 TRACE_PATH = './20160320'
 PLAIN_TEXT_PATH = './20160320/log0320.txt'
@@ -28,36 +27,36 @@ SBOX = [99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 11
         134, 193, 29, 158, 225, 248, 152, 17, 105, 217, 142, 148, 155, 30, 135, 233, 206, 85, 40, 223,
         140, 161, 137, 13, 191, 230, 66, 104, 65, 153, 45, 15, 176, 84, 187, 22]
 
-def getY(plainText, nByte, key):
+def GetY(plainText, nByte, key):
     x = plainText[nByte*2:nByte*2+2]
-    return SBOX[int(x,16) ^ key]
+    return SBOX[int(x, 16) ^ key]
 
-def hammingWeight(input):
+def HammingWeight(input):
     count = 0
-    if(input & 0x80):
+    if input & 0x80:
         count += 1
-    if (input & 0x40):
+    if input & 0x40:
         count += 1
-    if (input & 0x20):
+    if input & 0x20:
         count += 1
-    if (input & 0x10):
+    if input & 0x10:
         count += 1
-    if (input & 0x08):
+    if input & 0x08:
         count += 1
-    if (input & 0x04):
+    if input & 0x04:
         count += 1
-    if (input & 0x02):
+    if input & 0x02:
         count += 1
-    if (input & 0x01):
+    if input & 0x01:
         count += 1
     return count
 
-trace_sum = numpy.zeros((TRACE_AMOUNT, 1), dtype= float)
-trace_square_sum = numpy.zeros((TRACE_AMOUNT, 1), dtype= float)
-h_sum = numpy.zeros((BYTE_AMOUNT, KEY_AMOUNT), dtype= int)
+trace_sum = numpy.zeros((TRACE_AMOUNT, 1), dtype=float)
+trace_square_sum = numpy.zeros((TRACE_AMOUNT, 1), dtype=float)
+h_sum = numpy.zeros((BYTE_AMOUNT, KEY_AMOUNT), dtype=int)
 h_square_sum = numpy.zeros((BYTE_AMOUNT, KEY_AMOUNT), dtype=int)
 
-h_times_t_sum = [[numpy.zeros((TRACE_AMOUNT, 1), dtype= float)] * KEY_AMOUNT] * BYTE_AMOUNT
+h_times_t_sum = [[numpy.zeros((TRACE_AMOUNT, 1), dtype=float)] * KEY_AMOUNT] * BYTE_AMOUNT
 
 
 start_time = time.time()
@@ -87,7 +86,7 @@ for i in range(DATA_AMOUNT):
 
         for key in range(KEY_AMOUNT):
 
-            h_now = hammingWeight(getY(plainText, nByte, key))
+            h_now = HammingWeight(GetY(plainText, nByte, key))
             h_sum[nByte][key] += h_now
             h_square_sum[nByte][key] += (h_now * h_now)
             h_times_t_sum[nByte][key] += h_now * trace_now
