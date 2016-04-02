@@ -52,12 +52,12 @@ def hammingWeight(input):
         count += 1
     return count
 
-trace_sum = numpy.zeros((TRACE_AMOUNT, 1), dtype = float)
-trace_square_sum = numpy.zeros((TRACE_AMOUNT, 1), dtype = float)
-h_sum = numpy.zeros((BYTE_AMOUNT, KEY_AMOUNT), dtype = int)
-h_square_sum = numpy.zeros((BYTE_AMOUNT, KEY_AMOUNT), dtype = int)
+trace_sum = numpy.zeros((TRACE_AMOUNT, 1), dtype= float)
+trace_square_sum = numpy.zeros((TRACE_AMOUNT, 1), dtype= float)
+h_sum = numpy.zeros((BYTE_AMOUNT, KEY_AMOUNT), dtype= int)
+h_square_sum = numpy.zeros((BYTE_AMOUNT, KEY_AMOUNT), dtype=int)
 
-h_times_t_sum = [[numpy.zeros((TRACE_AMOUNT, 1), dtype = float)] * KEY_AMOUNT] * BYTE_AMOUNT
+h_times_t_sum = [[numpy.zeros((TRACE_AMOUNT, 1), dtype= float)] * KEY_AMOUNT] * BYTE_AMOUNT
 
 
 start_time = time.time()
@@ -98,7 +98,7 @@ for i in range(DATA_AMOUNT):
             cc_numerator = (Lxx * Lyy) ** 0.5  # 分母
             cc = cc_fractions / cc_numerator
 
-            if(cc.max() > maxCC):
+            if cc.max() > maxCC:
                 maxCC = cc
                 maxKey = key
 
