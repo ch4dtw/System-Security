@@ -7,10 +7,9 @@ PLAIN_TEXT_PATH = './20160320/log0320.txt'
 LOG = "NEW_LOG_1234.txt"
 TRACE_NAME = 'trace'
 
-CS_TIME = time.time()
-BYTE_AMOUNT = 16
+BYTE_AMOUNT = 16  # 16
 KEY_AMOUNT = 256  # 00~FF
-DATA_AMOUNT = 10  # 1000*10
+DATA_AMOUNT = 10000  # 1000*10
 TRACE_AMOUNT = 48031
 
 SBOX = [99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 118, 202, 130, 201, 125,
@@ -27,11 +26,11 @@ SBOX = [99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 11
         134, 193, 29, 158, 225, 248, 152, 17, 105, 217, 142, 148, 155, 30, 135, 233, 206, 85, 40, 223,
         140, 161, 137, 13, 191, 230, 66, 104, 65, 153, 45, 15, 176, 84, 187, 22]
 
-def GetY(plainText, nByte, key):
+def getY(plainText, nByte, key):
     x = plainText[nByte*2:nByte*2+2]
     return SBOX[int(x, 16) ^ key]
 
-def HammingWeight(input):
+def hammingWeight(input):
     count = 0
     if input & 0x80:
         count += 1
@@ -55,9 +54,7 @@ trace_sum = numpy.zeros((TRACE_AMOUNT, 1), dtype=float)
 trace_square_sum = numpy.zeros((TRACE_AMOUNT, 1), dtype=float)
 h_sum = numpy.zeros((BYTE_AMOUNT, KEY_AMOUNT), dtype=int)
 h_square_sum = numpy.zeros((BYTE_AMOUNT, KEY_AMOUNT), dtype=int)
-
-h_times_t_sum = [[numpy.zeros((TRACE_AMOUNT, 1), dtype=float)] * KEY_AMOUNT] * BYTE_AMOUNT
-
+h_times_t_sum = numpy.zeros((BYTE_AMOUNT, KEY_AMOUNT, TRACE_AMOUNT, 1), dtype=float)
 
 start_time = time.time()
 plainTextFile = open(PLAIN_TEXT_PATH, 'r')
@@ -77,8 +74,6 @@ for i in range(DATA_AMOUNT):
     plainText = dataTemp[len(dataTemp) - 33:len(dataTemp) - 1]
     junk = plainTextFile.readline()
 
-    print('start', i)
-
     for nByte in range(BYTE_AMOUNT):
 
         maxCC = 0.0
@@ -86,7 +81,7 @@ for i in range(DATA_AMOUNT):
 
         for key in range(KEY_AMOUNT):
 
-            h_now = HammingWeight(GetY(plainText, nByte, key))
+            h_now = hammingWeight(getY(plainText, nByte, key))
             h_sum[nByte][key] += h_now
             h_square_sum[nByte][key] += (h_now * h_now)
             h_times_t_sum[nByte][key] += h_now * trace_now
@@ -96,9 +91,10 @@ for i in range(DATA_AMOUNT):
             cc_fractions = h_times_t_sum[nByte][key] - ((h_sum[nByte][key] * trace_sum) / (i + 1))  # 分子
             cc_numerator = (Lxx * Lyy) ** 0.5  # 分母
             cc = cc_fractions / cc_numerator
+            cc[numpy.isnan(cc)] = 0
 
             if cc.max() > maxCC:
-                maxCC = cc
+                maxCC = cc.max()
                 maxKey = key
 
         log_key += ("%02X" % maxKey)
