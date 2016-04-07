@@ -4,7 +4,7 @@ import time
 
 TRACE_PATH = './20160320'
 PLAIN_TEXT_PATH = './20160320/log0320.txt'
-LOG = "NEW_LOG_1234.txt"
+LOG = "NEW_LOG_useCC.txt"
 TRACE_NAME = 'trace'
 
 BYTE_AMOUNT = 16  # 16
