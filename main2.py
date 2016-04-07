@@ -26,9 +26,11 @@ SBOX = [99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 11
         134, 193, 29, 158, 225, 248, 152, 17, 105, 217, 142, 148, 155, 30, 135, 233, 206, 85, 40, 223,
         140, 161, 137, 13, 191, 230, 66, 104, 65, 153, 45, 15, 176, 84, 187, 22]
 
+
 def getY(plainText, nByte, key):
-    x = plainText[nByte*2:nByte*2+2]
+    x = plainText[nByte * 2:nByte * 2 + 2]
     return SBOX[int(x, 16) ^ key]
+
 
 def hammingWeight(input):
     count = 0
@@ -49,6 +51,7 @@ def hammingWeight(input):
     if input & 0x01:
         count += 1
     return count
+
 
 trace_sum = numpy.zeros((TRACE_AMOUNT, 1), dtype=float)
 trace_square_sum = numpy.zeros((TRACE_AMOUNT, 1), dtype=float)

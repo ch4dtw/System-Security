@@ -11,7 +11,7 @@ TRACE_NAME = 'A'
 
 BYTE_AMOUNT = 16  # 16
 KEY_AMOUNT = 256  # 00~FF
-DATA_AMOUNT = 2500*2  # 2500*2
+DATA_AMOUNT = 2500 * 2  # 2500*2
 TRACE_AMOUNT = 100004
 
 SBOX = [99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 118, 202, 130, 201, 125,
@@ -28,9 +28,11 @@ SBOX = [99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 11
         134, 193, 29, 158, 225, 248, 152, 17, 105, 217, 142, 148, 155, 30, 135, 233, 206, 85, 40, 223,
         140, 161, 137, 13, 191, 230, 66, 104, 65, 153, 45, 15, 176, 84, 187, 22]
 
+
 def getY(plainText, nByte, key):
-    x = plainText[nByte*2:nByte*2+2]
+    x = plainText[nByte * 2:nByte * 2 + 2]
     return SBOX[int(x, 16) ^ key]
+
 
 def hammingWeight(input):
     count = 0
@@ -68,8 +70,8 @@ for i in range(DATA_AMOUNT):
     log_key = ''
     print_key = ''
 
-    if i//2500 == 0:
-        fileName = '%s%s_%04d' % (TRACE_PATH_1, TRACE_PATH_1[len(TRACE_PATH_1)-14:], i+1)
+    if i // 2500 == 0:
+        fileName = '%s%s_%04d' % (TRACE_PATH_1, TRACE_PATH_1[len(TRACE_PATH_1) - 14:], i + 1)
         trace_now = scipy.io.loadmat(fileName)[TRACE_NAME]
 
         dataTemp = plainTextFile1.readline()
@@ -83,7 +85,6 @@ for i in range(DATA_AMOUNT):
         dataTemp = plainTextFile2.readline()
         plainText = dataTemp[len(dataTemp) - 33:len(dataTemp) - 1]
         junk = plainTextFile2.readline()
-
 
     for nByte in range(BYTE_AMOUNT):
 
