@@ -1,0 +1,40 @@
+enum {
+   change_cipher_spec(20), alert(21), handshake(22),
+   application_data(23), (255)
+} ContentType;
+--------------------------------------------------------------------------
+struct {
+   ContentType type;
+   ProtocolVersion version;
+   uint16 length;
+   opaque fragment[TLSPlaintext.length];
+} TLSPlaintext;
+--------------------------------------------------------------------------
+struct {
+    ProtocolVersion client_version;
+    Random random;
+    SessionID session_id;
+    CipherSuite cipher_suites<2..2^16-2>;
+    CompressionMethod compression_methods<1..2^8-1>;
+    select (extensions_present) {
+        case false:
+            struct {};
+        case true:
+            Extension extensions<0..2^16-1>;
+    };
+} ClientHello;
+--------------------------------------------------------------------------
+struct {
+    ProtocolVersion server_version;
+    Random random;
+    SessionID session_id;
+    CipherSuite cipher_suite;
+    CompressionMethod compression_method;
+    select (extensions_present) {
+        case false:
+            struct {};
+        case true:
+            Extension extensions<0..2^16-1>;
+    };
+} ServerHello;
+--------------------------------------------------------------------------
