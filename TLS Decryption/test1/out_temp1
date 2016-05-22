@@ -1,0 +1,1 @@
+b'GET / HTTP/1.0\r\nUser-Agent: curl/7.35.0\r\nHost: localhost:4430\r\nAccept: */*'

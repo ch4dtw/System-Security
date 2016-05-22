@@ -1,3 +1,16 @@
+Get " handshake " fragment to server:  286                      : Client_Hello
+Get " handshake " fragment to server:  262                      : Client_Key_Exchange
+Get " change_cipher_spec " fragment to server:  1      : Change_Cipher_Spec
+Get " handshake " fragment to server:  64                        : Finished
+Get " application_data " fragment to server:  128     : Application_Data
+Get " alert " fragment to server:  48                                  : Alert
+Get " handshake " fragment from server:  87                    : Server_Hello
+Get " handshake " fragment from server:  2144                : Certificate
+Get " handshake " fragment from server:  4                      : Server_Hello_Done
+Get " change_cipher_spec " fragment from server:  1 : Change_Cipher_Spec
+Get " handshake " fragment from server:  64                    : Finished
+Get " application_data " fragment from server:  416 :Application_Data
+Get " alert " fragment from server:  48                              : Alert
  --------------------------------------------------------------------------
 enum {
    change_cipher_spec(20), alert(21), handshake(22),
@@ -10,6 +23,31 @@ struct {
    uint16 length;
    opaque fragment[TLSPlaintext.length];
 } TLSPlaintext;
+--------------------------------------------------------------------------
+ enum {
+          hello_request(0), client_hello(1), server_hello(2),
+          certificate(11), server_key_exchange (12),
+          certificate_request(13), server_hello_done(14),
+          certificate_verify(15), client_key_exchange(16),
+          finished(20), (255)
+      } HandshakeType;
+--------------------------------------------------------------------------
+      struct {
+          HandshakeType msg_type;    /* handshake type */
+          uint24 length;             /* bytes in message */
+          select (HandshakeType) {
+              case hello_request:       HelloRequest;
+              case client_hello:        ClientHello;
+              case server_hello:        ServerHello;
+              case certificate:         Certificate;
+              case server_key_exchange: ServerKeyExchange;
+              case certificate_request: CertificateRequest;
+              case server_hello_done:   ServerHelloDone;
+              case certificate_verify:  CertificateVerify;
+              case client_key_exchange: ClientKeyExchange;
+              case finished:            Finished;
+          } body;
+      } Handshake;
 --------------------------------------------------------------------------
 struct {
     ProtocolVersion client_version;
@@ -38,29 +76,4 @@ struct {
             Extension extensions<0..2^16-1>;
     };
 } ServerHello;
---------------------------------------------------------------------------
- enum {
-          hello_request(0), client_hello(1), server_hello(2),
-          certificate(11), server_key_exchange (12),
-          certificate_request(13), server_hello_done(14),
-          certificate_verify(15), client_key_exchange(16),
-          finished(20), (255)
-      } HandshakeType;
---------------------------------------------------------------------------
-      struct {
-          HandshakeType msg_type;    /* handshake type */
-          uint24 length;             /* bytes in message */
-          select (HandshakeType) {
-              case hello_request:       HelloRequest;
-              case client_hello:        ClientHello;
-              case server_hello:        ServerHello;
-              case certificate:         Certificate;
-              case server_key_exchange: ServerKeyExchange;
-              case certificate_request: CertificateRequest;
-              case server_hello_done:   ServerHelloDone;
-              case certificate_verify:  CertificateVerify;
-              case client_key_exchange: ClientKeyExchange;
-              case finished:            Finished;
-          } body;
-      } Handshake;
 --------------------------------------------------------------------------
