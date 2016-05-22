@@ -1,4 +1,5 @@
 from decoder import *
+import sys
 
 content1=b''
 content2=b''
@@ -58,7 +59,7 @@ content_typelist = {
 #################################################
 #in1,in2,in3,out1,out2 = sys.argv[1:]
 folder = sys.argv[1]
-in1, in2, in3, out1, out2 = folder+"in1",+"in2",+"in3",+"out1", +"out2"
+in1, in2, in3, out1, out2 = folder+"in1" ,folder+"in2" ,folder+"in3" ,folder+"out1" ,folder+"out2"
 #read from in1 in2
 f1 = open(in1, 'rb')
 f2 = open(in2, 'rb')
