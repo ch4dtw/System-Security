@@ -68,36 +68,15 @@ while  content1:
 
 	print("Get \"", content_typelist[content_type],"\" fragment to server: ",len(fragment))
 	if content_type == 0x14:
-		if turn == 3:
-			cli_change_cipher_spec += fragment
-		else :
-			 print("fragment analyzed failed")
+		cli_change_cipher_spec += fragment
+	elif content_type == 0x15:
+		cli_alert += fragment
 	elif content_type == 0x16:
-		if turn == 1 :
-			cli_hello += fragment
-		else :
-			 print("fragment analyzed failed")
-		if turn == 2:
-			cli_key_exchange += fragment
-		else :
-			 print("fragment analyzed failed")
+		print ("yoooooo")
 	elif content_type == 0x17:
-		if turn == 5:
-			cli_application_data += fragment
-		else :
-			 print("fragment analyzed failed")
-	elif content_type == 0x20:
-		if turn == 4:
-			cli_finished += fragment
-		else :
-			 print("fragment analyzed failed")
-	elif content_type == 0x21:
-		if turn == 6:
-			cli_finished += fragment
-		else :
-			print("fragment analyzed failed")
+		cli_application_data += fragment
 	else :
-		print("Unkonwn type")
+		print("Unknown content type")
 
 		#print("content_type : \"" ,content_typelist[content_type],"\" to server not decoding yet")
 	content1 = content1[5+length:]
@@ -114,44 +93,17 @@ while content2:
 	# contents of length
 	fragment = content2[5:5+length]
 	print("Get \"", content_typelist[content_type],"\" fragment from server: ",len(fragment))
-	if content_type == 0x11:
-		if turn == 2:
-			serv_change_cipher_spec += fragment
-		else :
-			 print("fragment analyzed failed")
-	elif content_type == 0x14:
-		if turn == :
-			serv_change_cipher_spec += fragment
-		else :
-			 print("fragment analyzed failed")
+	if content_type == 0x14:
+		serv_change_cipher_spec += fragment
+	elif content_type == 0x15:
+		serv_alert += fragment
 	elif content_type == 0x16:
-		print(turn)
-		if turn == 1 :
-			serv_hello += fragment
-			print("yooooooooooooooooooo")
-		else :
-			 print("fragment analyzed failed")
-		if turn == :
-			serv_key_exchange += fragment
-		else :
-			 print("fragment analyzed failed")
+		print ("yoooooo")
 	elif content_type == 0x17:
-		if turn == :
-			serv_application_data += fragment
-		else :
-			 print("fragment analyzed failed")
-	elif content_type == 0x20:
-		if turn == :
-			serv_finished += fragment
-		else :
-			 print("fragment analyzed failed")
-	elif content_type == 0x21:
-		if turn == :
-			serv_finished += fragment
-		else :
-			print("fragment analyzed failed")
+		serv_application_data += fragment
 	else :
-		print("Unkonwn type")
+		print("Unknown content type")
+
 	#else:
 
 		#print("content_type : \"" ,content_typelist[content_type],"\" from server not decoding yet")
@@ -178,7 +130,8 @@ print("cli_random : ",cli_random.hex())
 
 
 print("server packet type is : ", handshake_typelist[serv_hello[0]])
-serv_random = serv_hello[6:38]
+serv_random = serv_handshake_mesg[6:38]
+serv_handshake_mesg = serv_handshake_mesg[38:]
 print("serv_random : ",serv_random.hex())
 
 #################################################
