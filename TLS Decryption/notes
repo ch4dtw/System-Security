@@ -110,3 +110,22 @@ struct {
                   ClientDiffieHellmanPublic;
           } exchange_keys;
       } ClientKeyExchange;
+--------------------------------------------------------------------------
+   struct {
+       ContentType type;
+       ProtocolVersion version;
+       uint16 length;
+       select (SecurityParameters.cipher_type) {
+           case stream: GenericStreamCipher;
+           case block:  GenericBlockCipher;
+           case aead:   GenericAEADCipher;
+       } fragment;
+   } TLSCiphertext;
+--------------------------------------------------------------------------
+   struct {
+      opaque nonce_explicit[SecurityParameters.record_iv_length];
+      aead-ciphered struct {
+          opaque content[TLSCompressed.length];
+      };
+   } GenericAEADCipher;
+--------------------------------------------------------------------------
