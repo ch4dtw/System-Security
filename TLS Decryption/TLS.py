@@ -2,7 +2,11 @@ from decoder import *
 
 content1=b''
 content2=b''
-secret_key=b''
+encrypted_pre_master_secret = b''
+pre_master_secret = b''
+master_secret=b''
+cli_key = b''
+serv_key = b''
 ######################################################
 # message list
 cli_handshake_mesg = b''
@@ -44,9 +48,10 @@ content_typelist = {
 					, 255 :'Hello world'\
 					}
 #################################################
+in1, in2, in3 = "test1/in1","test1/in2","test1/in3"
 #read from in1 in2
-f1 = open('test1/in1', 'rb')
-f2 = open('test1/in2', 'rb')
+f1 = open(in1, 'rb')
+f2 = open(in2, 'rb')
 content1 = f1.read()
 content2 = f2.read()
 f1.close()
@@ -127,37 +132,43 @@ while content2:
 	content2 = content2[5+length:]
 	turn += 1
 
-# #################################################
-# # get client and server's random
+#################################################
+# get client and server's random
 
-# # one byte for handshake type
-# # three bytes for handshake length
-# # two bytes for ProtocolVersion
-# # 1+3+2 = 6
-# print("client packet type is : ", handshake_typelist[cli_hello[0]])
-# cli_random = cli_hello[6:38]
-# print("cli_random : ",cli_random.hex())
+# 1 byte for handshake type
+# 3 bytes for handshake length
+# 2 bytes for ProtocolVersion
+# 1+3+2 = 6
+# random nubmer--
+# 4 bytes for gmt_unix_time
+# 28 bytes for random bytes
+# 4+28 = 32
+cli_random = cli_hello[6:38]
+print("cli_random : ",cli_random.hex())
 
-# # four bytes for gmt_unix_time
-# # twenty-eight bytes for random bytes
-# # 4+28
-# #one byte + seession_id's length <0...32>
-# #two byte + cipher_suites's length <2..2^16-2>
-# #
+#1 byte + session_id's length <0...32>
+#2 byte + cipher_suites's length <2..2^16-2>
+#if not null
+#2 byte + extensions<0..2^16-1>
 
+serv_random = serv_hello[6:38]
+print("serv_random : ",serv_random.hex())
 
-# print("server packet type is : ", handshake_typelist[serv_hello[0]])
-# serv_random = serv_handshake_mesg[6:38]
-# serv_handshake_mesg = serv_handshake_mesg[38:]
-# print("serv_random : ",serv_random.hex())
+#################################################
+# 1 byte for handshake type
+# 3 bytes for handshake length
+# 2 bytes for ProtocolVersion
+# 1+3+2 = 6
+encrypted_pre_master_secret = cli_key_exchange[6:]
+print("encrypted_pre_master_secret : ",encrypted_pre_master_secret.hex())
 
-# #################################################
+pre_master_secret = RSA_DECRYPT(in3,encrypted_pre_master_secret)
+print("pre_master_secret : ", pre_master_secret.hex())
 
-
-# # def output():
-# # 	f1 = open('test1/out1', 'wb')
-# # 	f1.write(b'Hello world')
-# # 	f1.close()
-# # 	f2 = open('test1/out1', 'wb')
-# # 	f2.write(b'Hello world')
-# # 	f2.close()
+# def output():
+# 	f1 = open('test1/out1', 'wb')
+# 	f1.write(b'Hello world')
+# 	f1.close()
+# 	f2 = open('test1/out1', 'wb')
+# 	f2.write(b'Hello world')
+# 	f2.close()
