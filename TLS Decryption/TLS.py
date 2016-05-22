@@ -15,12 +15,12 @@ cli_alert = b''
 
 serv_handshake_mesg = b''
 serv_hello = b''
-serv_key_exchange = b''
+serv_certificate = b''
+serv_hello_done = b''
 serv_change_cipher_spec = b''
 serv_finished = b''
 serv_application_data = b''
 serv_alert = b''
-serv_certificate = b''
 ###########################################
 #typelist
 handshake_typelist = {
@@ -72,7 +72,14 @@ while  content1:
 	elif content_type == 0x15:
 		cli_alert += fragment
 	elif content_type == 0x16:
-		print ("yoooooo")
+		if fragment[0] == 0x01:
+			print("\"",handshake_typelist[fragment[0]],"\"")
+			cli_hello += fragment
+		elif fragment[0] == 0x10:
+			print("\"",handshake_typelist[fragment[0]],"\"")
+			cli_key_exchange += fragment
+		else:
+			cli_finished += fragment
 	elif content_type == 0x17:
 		cli_application_data += fragment
 	else :
@@ -98,7 +105,17 @@ while content2:
 	elif content_type == 0x15:
 		serv_alert += fragment
 	elif content_type == 0x16:
-		print ("yoooooo")
+		if fragment[0] == 0x02:
+			print("\"",handshake_typelist[fragment[0]],"\"")
+			serv_hello += fragment
+		elif fragment[0] == 0x0B:
+			print("\"",handshake_typelist[fragment[0]],"\"")
+			serv_certificate += fragment
+		elif fragment[0] == 0x0E:
+			print("\"",handshake_typelist[fragment[0]],"\"")
+			serv_hello_done += fragment
+		else:
+			serv_finished += fragment
 	elif content_type == 0x17:
 		serv_application_data += fragment
 	else :
@@ -110,37 +127,37 @@ while content2:
 	content2 = content2[5+length:]
 	turn += 1
 
-#################################################
-# get client and server's random
+# #################################################
+# # get client and server's random
 
-# one byte for handshake type
-# three bytes for handshake length
-# two bytes for ProtocolVersion
-# 1+3+2 = 6
-print("client packet type is : ", handshake_typelist[cli_hello[0]])
-cli_random = cli_hello[6:38]
-print("cli_random : ",cli_random.hex())
+# # one byte for handshake type
+# # three bytes for handshake length
+# # two bytes for ProtocolVersion
+# # 1+3+2 = 6
+# print("client packet type is : ", handshake_typelist[cli_hello[0]])
+# cli_random = cli_hello[6:38]
+# print("cli_random : ",cli_random.hex())
 
-# four bytes for gmt_unix_time
-# twenty-eight bytes for random bytes
-# 4+28
-#one byte + seession_id's length <0...32>
-#two byte + cipher_suites's length <2..2^16-2>
-#
-
-
-print("server packet type is : ", handshake_typelist[serv_hello[0]])
-serv_random = serv_handshake_mesg[6:38]
-serv_handshake_mesg = serv_handshake_mesg[38:]
-print("serv_random : ",serv_random.hex())
-
-#################################################
+# # four bytes for gmt_unix_time
+# # twenty-eight bytes for random bytes
+# # 4+28
+# #one byte + seession_id's length <0...32>
+# #two byte + cipher_suites's length <2..2^16-2>
+# #
 
 
-# def output():
-# 	f1 = open('test1/out1', 'wb')
-# 	f1.write(b'Hello world')
-# 	f1.close()
-# 	f2 = open('test1/out1', 'wb')
-# 	f2.write(b'Hello world')
-# 	f2.close()
+# print("server packet type is : ", handshake_typelist[serv_hello[0]])
+# serv_random = serv_handshake_mesg[6:38]
+# serv_handshake_mesg = serv_handshake_mesg[38:]
+# print("serv_random : ",serv_random.hex())
+
+# #################################################
+
+
+# # def output():
+# # 	f1 = open('test1/out1', 'wb')
+# # 	f1.write(b'Hello world')
+# # 	f1.close()
+# # 	f2 = open('test1/out1', 'wb')
+# # 	f2.write(b'Hello world')
+# # 	f2.close()

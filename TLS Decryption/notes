@@ -11,6 +11,27 @@ Get " change_cipher_spec " fragment from server:  1 : Change_Cipher_Spec
 Get " handshake " fragment from server:  64                    : Finished
 Get " application_data " fragment from server:  416 :Application_Data
 Get " alert " fragment from server:  48                              : Alert
+---------------------------------------------------------------------------
+handshake_typelist = {
+          0:'hello_request'\
+          ,1:'client_hello'\
+          ,2:'server_hello'\
+          ,11:'certificate'\
+          ,12:'server_key_exchange'\
+          ,13:'certificate_request'\
+          ,14:'server_hello_done'\
+          ,15:'certificate_verify'\
+          ,16:'client_key_exchange'\
+          ,20:'finished'\
+          ,255:'Hello world'\
+          }
+content_typelist = {
+          20:'change_cipher_spec'\
+          , 21:'alert'\
+          , 22:'handshake'\
+          , 23:'application_data'\
+          , 255 :'Hello world'\
+          }
  --------------------------------------------------------------------------
 enum {
    change_cipher_spec(20), alert(21), handshake(22),
