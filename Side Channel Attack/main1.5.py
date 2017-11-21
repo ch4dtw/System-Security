@@ -31,28 +31,6 @@ def getY(plainText, nByte, key):
     x = plainText[nByte * 2:nByte * 2 + 2]
     return SBOX[int(x, 16) ^ key]
 
-
-def hammingWeight(input):
-    count = 0
-    if input & 0x80:
-        count += 1
-    if input & 0x40:
-        count += 1
-    if input & 0x20:
-        count += 1
-    if input & 0x10:
-        count += 1
-    if input & 0x08:
-        count += 1
-    if input & 0x04:
-        count += 1
-    if input & 0x02:
-        count += 1
-    if input & 0x01:
-        count += 1
-    return count
-
-
 lsb0_count = numpy.zeros((BYTE_AMOUNT, KEY_AMOUNT), dtype=int)
 lsb1_count = numpy.zeros((BYTE_AMOUNT, KEY_AMOUNT), dtype=int)
 lsb0_avg = numpy.zeros((BYTE_AMOUNT, KEY_AMOUNT, TRACE_AMOUNT, 1), dtype=float)
